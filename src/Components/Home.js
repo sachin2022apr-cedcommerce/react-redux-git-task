@@ -1,26 +1,43 @@
 import { Button, Card } from '@shopify/polaris'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { getUser } from '../Actions/userAction';
 
 function Home(props) {
+  let [userData, setUserData] = useState()
+
   let profileNavigate = useNavigate();
   var handleViewProfile = () => {
     profileNavigate('/userprofile')
   }
+
+  useEffect(() => {
+    fetch(`https://api.github.com/users/${props.state.userName}`, {
+      headers: {
+        Authorization: `Bearer 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`
+      }
+    })
+      .then((res) => res.json())
+      .then((user) => {
+        setUserData({ ...user })
+      })
+  }, [props.state.userName])
+
   return (
     <div className='cc'>
-      {(props.userData !== undefined && props.userData.message !== 'Not Found') ? (<Card sectioned>
+      {(userData !== undefined && userData.message !== 'Not Found') ? (<Card sectioned>
         <div className='userCard'>
-          <img src={props.userData.avatar_url} alt="s" />
+          <img src={userData.avatar_url} alt="s" />
           <div className='userDetails'>
-            <span className='userName'>{props.userData.login}{" "}
+            <span className='userName'>{userData.login}{" "}
               <Button plain
                 onClick={() => handleViewProfile()}> View profile</Button></span>
-            <p>{props.userData.bio}</p>
+            <p>{userData.bio}</p>
             <div className='follow'>
-              <span>{props.userData.followers} <b>Followers</b></span>
-              <span>{props.userData.following} <b>Following</b></span>
-              <span>{props.userData.public_repos} <b>Repos</b></span>
+              <span>{userData.followers} <b>Followers</b></span>
+              <span>{userData.following} <b>Following</b></span>
+              <span>{userData.public_repos} <b>Repos</b></span>
               <p></p>
             </div>
           </div>
@@ -29,7 +46,16 @@ function Home(props) {
         No User Found
       </h1>}
     </div>
-
   )
 }
-export default Home
+const MapStateToProps = (state) => {
+  return {
+    state
+  }
+}
+const MapDispatchToProps = (dispatch) => {
+  return {
+    userDisplay: (b) => dispatch(getUser(b))
+  }
+}
+export default connect(MapStateToProps, MapDispatchToProps)(Home)
