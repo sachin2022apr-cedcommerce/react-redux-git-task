@@ -198,10 +198,9 @@ text-decoration: none !important;
   align-items: center;
   color: #6e7781 !important;
   cursor: pointer;
+  margin: 10% 0;
 }
 .footerDiv svg {
   color: #6e7781 !important;
 }
-.footerDiv p {
-  margin-top: 2%;
-}
+

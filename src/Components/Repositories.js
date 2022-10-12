@@ -17,12 +17,14 @@ export default function Repositories({ userData }) {
   var visibility = <span className='visibility'>Public</span>
   return (
     <div className='popularRepo'>
+      <Card title="Repositories" sectioned>
       {polularRepo.map((item, index) => {
         return <Card title={item.name} actions={[{ content: visibility }]} sectioned>
           <article className='userDescription'>{item.description}</article>
           <article className='dateOver'>Updated on {item.updated_at}</article>
         </Card>
       })}
+      </Card>
     </div>
   )
 }
